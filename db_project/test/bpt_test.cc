@@ -96,6 +96,8 @@ TEST_F(BptTest, FindTest1) {
     uint16_t val_size;
     int num_found = 0;
 
+    ASSERT_TRUE(table_id >= 0);
+
     for (int i = 0; i < num_keys; i++) {
         memset(buf, 0, MAX_VALUE_SIZE + 1);
         if (db_find(table_id, i, buf, &val_size) == 0) {
@@ -116,6 +118,8 @@ TEST_F(BptTest, DeleteTest) {
     int x, y, tmp;
     int num_deleted = 0;
     int mixingCount = num_keys * 3 / 2;
+
+    ASSERT_TRUE(table_id >= 0);
 
     db_key_t *keys = (db_key_t*)malloc(num_keys * sizeof(db_key_t));
     srand(time(NULL));
@@ -153,6 +157,8 @@ TEST_F(BptTest, FindTest2) {
     uint16_t val_size;
     int num_found = 0;
 
+    ASSERT_TRUE(table_id >= 0);
+
     for (int i = 0; i < num_keys; i++) {
         memset(buf, 0, MAX_VALUE_SIZE + 1);
         if (db_find(table_id, i, buf, &val_size) == 0) {
@@ -171,6 +177,8 @@ TEST_F(BptTest, FindTest2) {
  */
 TEST_F(BptTest, ScanTest) {
     int num_found = 0;
+
+    ASSERT_TRUE(table_id >= 0);
 
     std::vector<int64_t> *s_keys = new std::vector<int64_t>();
     std::vector<char*> *s_values = new std::vector<char*>();
