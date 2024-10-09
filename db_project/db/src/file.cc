@@ -1,5 +1,9 @@
 #include "file.h"
 
+// For stats
+int64_t stat_read_page;
+int64_t stat_write_page;
+
 // table id counter
 int tid_counter = 0;
 table_node tables[MAX_TABLES];
@@ -34,6 +38,12 @@ int file_search_table_id(int64_t table_id) {
 
     return -1;
 }
+
+#define file_read_page_internal(table_id, pagenum, dest) \
+    (pread(file_search_table_id(table_id), dest, PAGE_SIZE, PAGE_SIZE * pagenum))
+
+#define file_write_page_internal(table_id, pagenum, src) \
+    (pwrite(file_search_table_id(table_id), src, PAGE_SIZE, PAGE_SIZE * pagenum))
 
 // Insert table node into array with fd
 int64_t file_insert_table(const char *pathname, int fd) {
@@ -74,7 +84,7 @@ int64_t file_open_table_file(const char* pathname) {
         
         // Set table, get id
         table_id = file_insert_table(pathname, fd);
-        file_read_page(table_id, 0, header_page);
+        file_read_page_internal(table_id, 0, header_page);
 
         // If match, set table fd and return it
         if (header_page->magic_number == MAGIC_NUMBER) {
@@ -111,16 +121,16 @@ int64_t file_open_table_file(const char* pathname) {
     header_page->free_page_num = init_free_pages_num;
     header_page->num_of_pages = init_pages_num;
     header_page->root_page_num = -1;
-    file_write_page(table_id, 0, header_page);
+    file_write_page_internal(table_id, 0, header_page);
 
     // Set and write all free pages with for-loop
     for (pagenum_t i = 1; i < init_free_pages_num;) {
         tmp_free_page->next_free_page_num = i++;
-        file_write_page(table_id, i, tmp_free_page);
+        file_write_page_internal(table_id, i, tmp_free_page);
     }
 
     tmp_free_page->next_free_page_num = -1;
-    file_write_page(table_id, 1, tmp_free_page);
+    file_write_page_internal(table_id, 1, tmp_free_page);
 
     free(tmp_free_page);
     free(header_page);
@@ -190,12 +200,14 @@ void file_free_page(int64_t table_id, pagenum_t pagenum) {
 
 // Read an on-disk page into the in-memory page structure(dest)
 void file_read_page(int64_t table_id, pagenum_t pagenum, struct page_t* dest) {
-    pread(file_search_table_id(table_id), dest, PAGE_SIZE, PAGE_SIZE * pagenum);
+    file_read_page_internal(table_id, pagenum, dest);
+    stat_read_page++;
 }
 
 // Write an in-memory page(src) to the on-disk page
 void file_write_page(int64_t table_id, pagenum_t pagenum, const struct page_t* src) {
-    pwrite(file_search_table_id(table_id), src, PAGE_SIZE, PAGE_SIZE * pagenum);
+    file_write_page_internal(table_id, pagenum, src);
+    stat_write_page++;
 }
 
 // Close the table file
@@ -209,4 +221,10 @@ void file_close_table_files() {
     }
 
     tid_counter = 0;
+}
+
+// For stat
+void init_stat_file() {
+    stat_read_page = 0;
+    stat_write_page = 0;
 }

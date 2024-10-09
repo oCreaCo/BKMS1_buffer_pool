@@ -1,6 +1,9 @@
 #include "buffer.h"
 #include "file.h"
 
+// For stats
+int64_t stat_get_buffer;
+
 buffer_pool_t buffer_pool;
 
 void inline flush_buffer(buf_descriptor_t *buf_desc) {
@@ -76,6 +79,8 @@ int init_buffer_pool(uint32_t num_ht_entries, uint32_t num_buf) {
 //  ----------------------------------------------------------------------------
 
     buffer_pool.num_buf = num_buf;
+
+    init_buffer_stat();
 
     return 0;
 }
@@ -187,6 +192,8 @@ buf_descriptor_t *get_victim_buffer() {
 buf_descriptor_t *get_buffer(int64_t table_id, pagenum_t page_num) {
     buf_descriptor_t *buf_desc;
 
+    stat_get_buffer++;
+
 //  TODO -----------------------------------------------------------------------
     buf_desc = get_victim_buffer();
     pin_buffer(buf_desc);
@@ -270,4 +277,22 @@ int close_buffer_pool() {
     file_close_table_files();
 
     return ret;
+}
+
+void init_buffer_stat() {
+    stat_get_buffer = 0;
+    stat_read_page = 0;
+    stat_write_page = 0;
+}
+
+std::string get_buffer_stat() {
+    int64_t hit_ratio = (stat_get_buffer - stat_read_page) * 100 /
+                        (stat_get_buffer);
+
+    return string_format("get_buffer() count: %ld, file_read_page() count: %ld, file_write_page() count: %ld, buffer hit ratio: %ld%%",
+                          stat_get_buffer, stat_read_page, stat_write_page, hit_ratio);
+}
+
+void print_buffer_stat() {
+    std::cerr << get_buffer_stat() << std::endl;
 }

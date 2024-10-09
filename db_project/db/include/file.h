@@ -12,6 +12,10 @@
 
 #define MAX_TABLES 20
 
+// For stats
+extern int64_t stat_read_page;
+extern int64_t stat_write_page;
+
 typedef struct table_node {
     char pathname[128];
     int64_t table_id;

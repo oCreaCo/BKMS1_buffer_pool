@@ -11,6 +11,17 @@
  * detect bugs in the future projects.
  ******************************************************************************/
 
+class StatCout : public std::stringstream
+{
+public:
+    ~StatCout()
+    {
+        std::cout << "\u001b[32m[   STAT   ] \u001b[33m" << str() << "\u001b[0m" << std::flush;
+    }
+};
+
+#define STAT_COUT  StatCout()
+
 /*
  * TestFixture for B+ tree operation tests
  */
@@ -85,6 +96,8 @@ TEST_F(BptTest, InsertTest) {
 
     ASSERT_EQ(num_inserted, num_keys);
 
+    STAT_COUT << get_buffer_stat() << std::endl;
+
     free(keys);
 }
 
@@ -108,6 +121,8 @@ TEST_F(BptTest, FindTest1) {
     }
 
     ASSERT_EQ(num_found, num_keys);
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 }
 
 /*
@@ -146,6 +161,8 @@ TEST_F(BptTest, DeleteTest) {
 
     ASSERT_EQ(num_deleted, num_deletion);
 
+    STAT_COUT << get_buffer_stat() << std::endl;
+
     free(keys);
 }
 
@@ -169,6 +186,8 @@ TEST_F(BptTest, FindTest2) {
     }
 
     ASSERT_EQ(num_found, num_keys - num_deletion);
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 }
 
 /*
@@ -192,6 +211,8 @@ TEST_F(BptTest, ScanTest) {
         ASSERT_LE((*s_val_sizes)[i], MAX_VALUE_SIZE);
         free((*s_values)[i]);
     }
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 
     remove(pathname.c_str());
 }
@@ -243,6 +264,9 @@ TEST_F(BptTest, OverallOpsTest) {
 
     ASSERT_EQ(num_inserted, num_keys);
 
+    STAT_COUT << get_buffer_stat() << std::endl;
+
+    num_found = 0;
     for (int i = 0; i < num_keys; i++) {
         memset(buf, 0, MAX_VALUE_SIZE + 1);
         if (db_find(table_id, i, buf, &val_size) == 0) {
@@ -253,6 +277,8 @@ TEST_F(BptTest, OverallOpsTest) {
     }
 
     ASSERT_EQ(num_found, num_keys);
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 
     for (int i = 0; i < mixingCount; i++) {
         x = rand() % num_keys;
@@ -273,6 +299,8 @@ TEST_F(BptTest, OverallOpsTest) {
 
     ASSERT_EQ(num_deleted, num_deletion);
 
+    STAT_COUT << get_buffer_stat() << std::endl;
+
     num_found = 0;
     for (int i = 0; i < num_keys; i++) {
         memset(buf, 0, MAX_VALUE_SIZE + 1);
@@ -284,6 +312,8 @@ TEST_F(BptTest, OverallOpsTest) {
     }
 
     ASSERT_EQ(num_found, num_keys - num_deletion);
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 
     std::vector<int64_t> *s_keys = new std::vector<int64_t>();
     std::vector<char*> *s_values = new std::vector<char*>();
@@ -298,6 +328,8 @@ TEST_F(BptTest, OverallOpsTest) {
         ASSERT_LE((*s_val_sizes)[i], MAX_VALUE_SIZE);
         free((*s_values)[i]);
     }
+
+    STAT_COUT << get_buffer_stat() << std::endl;
 
     remove(pathname.c_str());
 }

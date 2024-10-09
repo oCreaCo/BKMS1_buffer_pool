@@ -27,7 +27,7 @@ int main( int argc, char ** argv ) {
     table_id = open_table(buffer);
 
     while (true) {
-        printf("(i/f/d/s/q) > ");
+        printf("(i/f/d/s/q/p) > ");
         scanf("%c", &instruction);
 
         switch (instruction) {
@@ -96,6 +96,9 @@ int main( int argc, char ** argv ) {
             else
                 printf("Scan failed\n");
 
+            break;
+        case 'p':
+            print_buffer_stat();
             break;
         case 'q':
             printf("Exit\n");
