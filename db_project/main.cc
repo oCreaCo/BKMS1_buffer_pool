@@ -99,6 +99,7 @@ int main( int argc, char ** argv ) {
             break;
         case 'p':
             print_buffer_stat();
+            while (getchar() != (int)'\n');
             break;
         case 'q':
             printf("Exit\n");
