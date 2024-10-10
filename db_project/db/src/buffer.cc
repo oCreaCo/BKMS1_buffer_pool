@@ -66,9 +66,6 @@ int init_buffer_pool(uint32_t num_ht_entries, uint32_t num_buf) {
     if (num_buf < 4)
         return 1;
 
-    if (num_ht_entries < num_buf)
-        return 1;
-
     if (init_tables())
         return 1;
 
