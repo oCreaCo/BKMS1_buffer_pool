@@ -39,11 +39,17 @@ typedef struct buf_descriptor_t {
 
 typedef struct ht_entry_t {
     buf_descriptor_t *buf_desc;
+//  TODO -----------------------------------------------------------------------
+//  ...
+//  ----------------------------------------------------------------------------
 } ht_entry_t;
 
 typedef struct hashtable_t {
     uint32_t num_ht_entries;
     ht_entry_t *ht_entries;
+//  TODO -----------------------------------------------------------------------
+//  ...
+//  ----------------------------------------------------------------------------
 } hashtable_t;
 
 typedef struct buffer_pool_t {
