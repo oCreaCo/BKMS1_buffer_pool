@@ -282,9 +282,13 @@ void init_buffer_stat() {
     stat_write_page = 0;
 }
 
+int64_t get_buffer_hit_ratio() {
+    return (stat_get_buffer - stat_read_page) * 100 /
+           (stat_get_buffer);
+}
+
 std::string get_buffer_stat() {
-    int64_t hit_ratio = (stat_get_buffer - stat_read_page) * 100 /
-                        (stat_get_buffer);
+    int64_t hit_ratio = get_buffer_hit_ratio();
 
     return string_format("get_buffer() count: %ld, file_read_page() count: %ld, file_write_page() count: %ld, buffer hit ratio: %ld%%",
                           stat_get_buffer, stat_read_page, stat_write_page, hit_ratio);

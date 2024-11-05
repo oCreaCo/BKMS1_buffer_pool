@@ -72,6 +72,7 @@ int close_buffer_pool();
 
 // For stat
 void init_buffer_stat();
+int64_t get_buffer_hit_ratio();
 std::string get_buffer_stat();
 void print_buffer_stat();
 

@@ -20,7 +20,7 @@ public:
     }
 };
 
-#define STAT_COUT  StatCout()
+#define STAT_COUT StatCout()
 
 /*
  * TestFixture for B+ tree operation tests
@@ -30,7 +30,7 @@ class BptTest : public ::testing::Test {
     /*
      * NOTE: You can also use constructor/destructor instead of SetUp() and
      * TearDown(). The official document says that the former is actually
-     * perferred due to some reasons. Checkout the document for the difference
+     * preferred due to some reasons. Checkout the document for the difference
      */
     BptTest() { 
         pathname = "bpt_test.db";
