@@ -43,7 +43,7 @@ do { \
     timeout.tv_sec += TIMEOUT; /* set timeout */ \
     \
     ret = NULL; \
-    pthread_create(&task_thread, NULL, test, NULL); /* do task concurrently */ \
+    pthread_create(&task_thread, NULL, test, this); /* do task concurrently */ \
     EXPECT_EQ(pthread_timedjoin_np(task_thread, (void**)(&ret), &timeout), 0); /* wait for the task thread with timeout */ \
     \
     ASSERT_EQ(clock_gettime(CLOCK_MONOTONIC, &end), 0); /* error handling */ \
