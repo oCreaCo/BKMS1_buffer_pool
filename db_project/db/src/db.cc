@@ -624,7 +624,7 @@ int adjust_root(int64_t table_id, buf_descriptor_t* root_buf) {
     /* Case: empty root. 
      */
 
-    free_buffer(table_id, root_buf);
+    free_page(table_id, root_buf);
 
     // If it has a child, promote 
     // the first (only) child
@@ -755,7 +755,7 @@ int coalesce_nodes(int64_t table_id, buf_descriptor_t *buf,
         neighbor_page->right_sibling_page_num = page->right_sibling_page_num;
     }
 
-    free_buffer(table_id, buf);
+    free_page(table_id, buf);
     mark_buffer_dirty(neighbor_buf);
     unpin_buffer(buf);
     unpin_buffer(neighbor_buf);

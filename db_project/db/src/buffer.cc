@@ -249,12 +249,12 @@ buf_descriptor_t *get_buffer_of_new_page(int64_t table_id) {
     return buf_desc;
 }
 
-void free_buffer(int64_t table_id, buf_descriptor_t *buf) {
+void free_page(int64_t table_id, buf_descriptor_t *buf) {
     buf_descriptor_t *header_buf = get_buffer(table_id, 0);
     page_t *header_page = header_buf->buf_page;
     page_t *buf_page = buf->buf_page;
 
-    // Add this page to the freelist.
+    // Add this page to the free page list.
     buf_page->next_free_page_num = header_page->free_page_num;
     header_page->free_page_num = buf->page_num;
 

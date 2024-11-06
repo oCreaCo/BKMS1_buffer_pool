@@ -67,7 +67,7 @@ int64_t buffer_open_table(const char *pathname);
 int init_buffer_pool(uint32_t num_ht_entries, uint32_t num_buf);
 buf_descriptor_t *get_buffer(int64_t table_id, pagenum_t page_num);
 buf_descriptor_t *get_buffer_of_new_page(int64_t table_id);
-void free_buffer(int64_t table_id, buf_descriptor_t *free_buf);
+void free_page(int64_t table_id, buf_descriptor_t *free_buf);
 int close_buffer_pool();
 
 // For stat
