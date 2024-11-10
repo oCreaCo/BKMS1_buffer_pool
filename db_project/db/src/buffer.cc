@@ -83,10 +83,26 @@ int init_buffer_pool(uint32_t num_ht_entries, uint32_t num_buf) {
 }
 
 // macros for hashtable
+//  TODO -----------------------------------------------------------------------
+
+/**
+ * @brief 
+ * If necessary, modify these functions or implement an additional functions
+ * of your own.
+ */
+
 #define hash(table_id, page_num) \
     ((((uint64_t)table_id) * 100000 + page_num)%(buffer_pool.hashtable.num_ht_entries))
 #define get_ht_entry(table_id, page_num) \
     (&(buffer_pool.hashtable.ht_entries[hash(table_id, page_num)]))
+
+//  or
+//
+//  ht_entry_t *get_ht_entry(int64_t table_id, pagenum_t page_num) {
+//      ...
+//  }
+
+//  ----------------------------------------------------------------------------
 
 /**
  * @brief Look up the buffer(page) in hashtable.
